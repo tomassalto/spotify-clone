@@ -6,14 +6,18 @@ interface Props {
 }
 
 const { playlist } = Astro.props;
-const { id, cover, title, artists, color } = playlist;
+const { id, cover, title, artists } = playlist;
 
 const artistsString = artists.join(", ");
+
+const currentPath = Astro.url.pathname;
+const pathParts = currentPath.split("/");
+const playlistId = pathParts[pathParts.length - 1];
 ---
 
 <a
   href={`/playlist/${id}`}
-  class="playlist-item flex relative p-2 overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-800"
+  class=`playlist-item flex relative p-2 overflow-hidden items-center gap-5 rounded-md hover:bg-zinc-800`
 >
   <picture class="h-12 w-12 flex-none">
     <img
@@ -24,12 +28,23 @@ const artistsString = artists.join(", ");
   </picture>
 
   <div class="flex flex-auto flex-col truncate">
-    <h4 class="text-white text-sm">
+    <h4 class={`text-sm ${id == playlistId ? "text-highlight" : "text-white"}`}>
       {title}
     </h4>
-
     <span class="text-xs text-gray-400">
       {artistsString}
     </span>
   </div>
 </a>
+
+<style>
+  .text-sm {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25rem; /* 20px */
+  }
+
+  .text-highlight {
+    color: #1dd65f;
+    font-weight: bold !important;
+  }
+</style>
